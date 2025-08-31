@@ -88,7 +88,7 @@ class UnstructuredDetectronONNXModel(UnstructuredObjectDetectionModel):
             logger_onnx.debug(
                 "Ignoring runtime error from onnx (likely due to encountering blank page).",
             )
-            return []
+            return LayoutElements.from_list([])
         input_w, input_h = image.size
         regions = self.postprocess(bboxes, labels, confidence_scores, input_w, input_h)
 
