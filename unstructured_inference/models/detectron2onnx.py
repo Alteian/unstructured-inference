@@ -10,7 +10,7 @@ from onnxruntime.quantization import QuantType, quantize_dynamic
 from PIL import Image
 
 from unstructured_inference.constants import Source
-from unstructured_inference.inference.layoutelement import LayoutElement
+from unstructured_inference.inference.layoutelement import LayoutElement, LayoutElements
 from unstructured_inference.logger import logger, logger_onnx
 from unstructured_inference.models.unstructuredmodel import (
     UnstructuredObjectDetectionModel,
@@ -113,7 +113,11 @@ class UnstructuredDetectronONNXModel(UnstructuredObjectDetectionModel):
             "CUDAExecutionProvider",
             "CPUExecutionProvider",
         ]
-        providers = [provider for provider in ordered_providers if provider in available_providers]
+        providers = [
+            provider
+            for provider in ordered_providers
+            if provider in available_providers
+        ]
 
         self.model = onnxruntime.InferenceSession(
             model_path,
@@ -174,4 +178,4 @@ class UnstructuredDetectronONNXModel(UnstructuredObjectDetectionModel):
                 regions.append(region)
 
         regions.sort(key=lambda element: element.bbox.y1)
-        return cast(List[LayoutElement], regions)
+        return LayoutElements.from_list(cast(List[LayoutElement], regions))
