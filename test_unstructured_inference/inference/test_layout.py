@@ -13,6 +13,7 @@ from unstructured_inference.inference.elements import (
     EmbeddedTextRegion,
     ImageTextRegion,
 )
+from unstructured_inference.constants import IsExtracted
 from unstructured_inference.models.unstructuredmodel import (
     UnstructuredElementExtractionModel,
     UnstructuredObjectDetectionModel,
@@ -34,7 +35,7 @@ def mock_initial_layout():
         6,
         8,
         text="A very repetitive narrative. " * 10,
-        source="Mock",
+        is_extracted=IsExtracted.TRUE,
     )
 
     title_block = EmbeddedTextRegion.from_coords(
@@ -43,7 +44,7 @@ def mock_initial_layout():
         3,
         4,
         text="A Catchy Title",
-        source="Mock",
+        is_extracted=IsExtracted.TRUE,
     )
 
     return [text_block, title_block]
@@ -108,7 +109,9 @@ class MockLayoutModel:
 
 
 def test_get_page_elements(monkeypatch, mock_final_layout):
-    image = Image.fromarray(np.random.randint(12, 14, size=(40, 10, 3)), mode="RGB")
+    image = Image.fromarray(
+        np.random.randint(12, 14, size=(40, 10, 3)).astype(np.uint8), mode="RGB"
+    )
     page = layout.PageLayout(
         number=0,
         image=image,
